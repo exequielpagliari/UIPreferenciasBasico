@@ -5,35 +5,43 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class DropTown : MonoBehaviour
 {
     [SerializeField] TMP_Dropdown dropdown;
-
+    [SerializeField] Resolution[] resolutions;
     [SerializeField] ResolutionController resolutionController;
     private void Start()
     {
         dropdown.onValueChanged.AddListener(delegate { OnDropdownChange(dropdown); });
+        PopulateDropdown();
     }
     public void OnDropdownChange(TMP_Dropdown dropdown)
     {
         int menuIndex = dropdown.value;
         List<TMP_Dropdown.OptionData> menuOptions = dropdown.options;
         Debug.Log("Dropdown Current Value: " + menuIndex);
+        resolutionController.ChangeResolution(menuIndex);
 
-        switch (menuIndex)
-        {
-            case 0:
-                resolutionController.Change480p();
-                return;
-            case 1:
-                resolutionController.Change720p();
-                return;
-            case 2:
-                resolutionController.Change900p();
-                return;
 
-        }
     }
 
+    void PopulateDropdown()
+    {
+        // Lista de opciones para el Dropdown
+        resolutions = resolutionController.TransferResolutions();
+        List<string> options = new List<string>();
+        foreach (Resolution resolution in  resolutions)
+        {
+            string s = "{0} x  {1}  @ {2} Hz";
+            string s1 = string.Format(s, resolution.width, resolution.height, resolution.refreshRateRatio);
+            options.Add(s1);
+        }
 
+        // Limpiar las opciones actuales del Dropdown
+        dropdown.ClearOptions();
+
+        // Agregar las nuevas opciones al Dropdown
+        dropdown.AddOptions(options);
+    }
 }

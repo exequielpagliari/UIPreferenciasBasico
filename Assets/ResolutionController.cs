@@ -8,41 +8,61 @@ public class ResolutionController : MonoBehaviour
 {
 
     [SerializeField] Toggle toggle;
-    
+    [SerializeField] Resolution[] resolutions;
+
+
+    private void Awake()
+    {
+        ReadResolutions();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
+        
         toggle.isOn = true;
     }
 
     
 
 
-    private void SetResolution(int width, int height, bool fullscreen)
+    private void SetResolution(int width, int height, FullScreenMode fullscreen, RefreshRate preferredRefreshRate)
     {
-        Screen.SetResolution(width, height, fullscreen);
+        Screen.SetResolution(width, height, fullscreen, preferredRefreshRate);
     }
 
 
-    public void Change480p()
+    private FullScreenMode ReadFullScreen()
     {
-        SetResolution(640, 480, toggle.isOn);
+        if (toggle.isOn)
+            return FullScreenMode.FullScreenWindow;
+        else
+            return FullScreenMode.Windowed;
+
     }
 
-    public void Change720p()
+    private void ReadResolutions()
     {
-        SetResolution(1280, 720, toggle.isOn);
+        // Obtiene la lista de resoluciones soportadas
+        resolutions = Screen.resolutions;
+
+        // Muestra las resoluciones posibles
+        foreach (Resolution resolution in resolutions)
+        {
+            Debug.Log(resolution.width + "x" + resolution.height + " @" + resolution.refreshRateRatio + "Hz");
+        }
     }
 
-    public void Change900p()
+
+    public void ChangeResolution(int posc)
     {
-        SetResolution(1600, 900, toggle.isOn);
+        Resolution resolution = resolutions[posc];
+        SetResolution(resolution.width, resolution.height, ReadFullScreen(), resolution.refreshRateRatio);
     }
 
-
-
-
-
+    public Resolution[] TransferResolutions()
+    {
+        return resolutions;
+    }
 
 }
