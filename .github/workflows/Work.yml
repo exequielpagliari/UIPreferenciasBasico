@@ -1,0 +1,26 @@
+name: Unity CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Unity project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Unity
+        uses: gameci/unity-installer@v2
+
+      - name: Build Unity project
+        uses: gameci/unity-builder@v2
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: unity-build
+          path: build/
