@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-ErrorErrorError
+
 
 public class DropTown : MonoBehaviour
 {
